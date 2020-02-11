@@ -30,6 +30,7 @@ class SolarSystem {
 }
 
 function generateSolarSystem() {
+
     // systemName = nameGenerator.generateSystemName
     // star(s)Count = weighted random number based on statistical chances of num stars in system.
     // starData = Star[]
@@ -41,5 +42,3 @@ function generateSolarSystem() {
 
     // return new System(systemName, starData, planetData)
 }
-
-generateSolarSystem();
