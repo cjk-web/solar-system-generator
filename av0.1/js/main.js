@@ -7,7 +7,7 @@ const starMaterial = new THREE.MeshLambertMaterial( { color: 0xffd615 } );
 
 function initialize() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
 
     renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true} );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -68,30 +68,22 @@ function buildSystemView() {
 }
 
 function testDynamicGeneration(seed, idx) {
-    var o = 0x3fffffff;
-    var x = 10;
-
-    var viewHeight = 1000;
-    var viewWidth = 1000;
-    var viewDepth = 1000;
 
     var rng = new lcg(seed, idx);
 
     for (var i=0; i<1000; i++) {
-        
-        x = rng.getInt();
-        var vX = ((x & o)/o*viewWidth)|0;
-        
-        x = rng.getInt();
-        var vY = ((x & o)/o*viewHeight)|0;
 
-        x = rng.getInt();
-        var vZ = ((x & o)/o*viewDepth)|0;
+        var vX = rng.getIntInRange(camera.position.x - 500, camera.position.x + 500);
+
+        var vY = rng.getIntInRange(camera.position.y - 500, camera.position.y + 500);
+
+        var vZ = rng.getIntInRange(camera.position.z - 500, camera.position.z + 500);
 
         var scale = rng.getIntInRange(1, 9);
 
         var sMesh = new THREE.Mesh(starGeometry, starMaterial);
-        sMesh.position.set(vX - 500, vY - 500, vZ - 500);
+        sMesh.position.set(vX, vY, vZ);
+        //sMesh.position.set(vX - 500, vY - 500, vZ - 500);
         sMesh.scale.set(scale, scale, scale);
         scene.add(sMesh);
     }
