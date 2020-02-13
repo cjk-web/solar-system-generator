@@ -29,6 +29,18 @@ class SolarSystem {
     }
 }
 
+class Cluster {
+    constructor(galaticV3, screenV3, numStars) {
+        this.galaticV3 = galaticV3;
+        this.screenV3 = screenV3;
+        this.numStars = numStars;
+    }
+}
+
+function generateStartingClusters() {
+    
+}
+
 function generateSolarSystem() {
 
     // systemName = nameGenerator.generateSystemName
