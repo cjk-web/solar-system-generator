@@ -3,7 +3,15 @@ let camera, scene, renderer, controls, hlight, mesh, mesh2;
 var isSystemView = false;
 
 const starGeometry = new THREE.IcosahedronGeometry(1,1);
-const starMaterial = new THREE.MeshLambertMaterial( { color: 0xffd615 } );
+const starMaterial = [
+    new THREE.MeshLambertMaterial( { color: 0xffd615 } ),   // yellow
+    new THREE.MeshLambertMaterial( { color: 0x6356e5 } ),   // blue
+    new THREE.MeshLambertMaterial( { color: 0xcf3030 } ),   // red
+    new THREE.MeshLambertMaterial( { color: 0xff9a3c } ),   // orange
+    new THREE.MeshLambertMaterial( { color: 0xffffff } )    // white
+];
+
+var lastCamPos;
 
 function initialize() {
     scene = new THREE.Scene();
@@ -26,6 +34,7 @@ function initialize() {
     }
 
     camera.position.set(6, -91, 40);
+    lastCamPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
     controls.update();
 }
 
@@ -70,23 +79,84 @@ function buildSystemView() {
 function testDynamicGeneration(seed, idx) {
 
     var rng = new lcg(seed, idx);
+    var clusterArray = [];
 
-    for (var i=0; i<1000; i++) {
+    var posCalcArray = [
+        { x: 0,     y: 0,       z: 0 },
+        { x: 1000,  y: 0,       z: 0 },
+        { x: 1000,  y: 0,       z: 1000 },
+        { x: 0,     y: 0,       z: 1000 },
+        { x: -1000, y: 0,       z: 1000 },
+        { x: -1000, y: 0,       z: 0 },
+        { x: -1000, y: 0,       z: -1000 },
+        { x: 0,     y: 0,       z: -1000 },
+        { x: 1000,  y: 0,       z: -1000 },
+        { x: 0,     y: 1000,   z: 0 },
+        { x: 1000,  y: 1000,   z: 0 },
+        { x: 1000,  y: 1000,   z: 1000 },
+        { x: 0,     y: 1000,   z: 1000 },
+        { x: -1000, y: 1000,   z: 1000 },
+        { x: -1000, y: 1000,   z: 0 },
+        { x: -1000, y: 1000,   z: -1000 },
+        { x: 0,     y: 1000,   z: -1000 },
+        { x: 1000,  y: 1000,   z: -1000 },
+        { x: 0,     y: -1000,  z: 0 },
+        { x: 1000,  y: -1000,  z: 0 },
+        { x: 1000,  y: -1000,  z: 1000 },
+        { x: 0,     y: -1000,  z: 1000 },
+        { x: -1000, y: -1000,  z: 1000 },
+        { x: -1000, y: -1000,  z: 0 },
+        { x: -1000, y: -1000,  z: -1000 },
+        { x: 0,     y: -1000,  z: -1000 },
+        { x: 1000,  y: -1000,  z: -1000 },
+    ];
 
-        var vX = rng.getIntInRange(camera.position.x - 500, camera.position.x + 500);
+    for (var c = 0; c < posCalcArray.length; c++) {
+        var gPos = new THREE.Vector3();
+        var sPos = new THREE.Vector3(posCalcArray[c].x, posCalcArray[c].y, posCalcArray[c].z);
+        var numStars = rng.getIntInRange(500, 1000);
 
-        var vY = rng.getIntInRange(camera.position.y - 500, camera.position.y + 500);
-
-        var vZ = rng.getIntInRange(camera.position.z - 500, camera.position.z + 500);
-
-        var scale = rng.getIntInRange(1, 9);
-
-        var sMesh = new THREE.Mesh(starGeometry, starMaterial);
-        sMesh.position.set(vX, vY, vZ);
-        //sMesh.position.set(vX - 500, vY - 500, vZ - 500);
-        sMesh.scale.set(scale, scale, scale);
-        scene.add(sMesh);
+        var cluster = new Cluster(gPos, sPos, numStars);
+        
+        clusterArray.push(cluster);
     }
+
+    for (var cl in clusterArray) {
+        for (var i = 0; i < clusterArray[cl].numStars; i++) {
+            var vX = rng.getIntInRange(clusterArray[cl].screenV3.x - 500, clusterArray[cl].screenV3.x + 500);
+    
+            var vY = rng.getIntInRange(clusterArray[cl].screenV3.y - 500, clusterArray[cl].screenV3.y + 500);
+    
+            var vZ = rng.getIntInRange(clusterArray[cl].screenV3.z - 500, clusterArray[cl].screenV3.z + 500);
+    
+            var scale = rng.getIntInRange(1, 5);
+    
+            var mat = rng.getIntInRange(0, 4)
+    
+            var sMesh = new THREE.Mesh(starGeometry, starMaterial[mat]);
+            sMesh.position.set(vX, vY, vZ);
+            sMesh.scale.set(scale, scale, scale);
+            scene.add(sMesh);
+        }
+    }
+
+    // for (var i=0; i<1000; i++) {
+
+    //     var vX = rng.getIntInRange(camera.position.x - 500, camera.position.x + 500);
+
+    //     var vY = rng.getIntInRange(camera.position.y - 500, camera.position.y + 500);
+
+    //     var vZ = rng.getIntInRange(camera.position.z - 500, camera.position.z + 500);
+
+    //     var scale = rng.getIntInRange(1, 5);
+
+    //     var mat = rng.getIntInRange(0, 4)
+
+    //     var sMesh = new THREE.Mesh(starGeometry, starMaterial[mat]);
+    //     sMesh.position.set(vX, vY, vZ);
+    //     sMesh.scale.set(scale, scale, scale);
+    //     scene.add(sMesh);
+    // }
 }
 
 function toggleSystem() {
@@ -103,6 +173,10 @@ function toggleSystem() {
 
 function animate() {
     requestAnimationFrame( animate );
+
+    if (lastCamPos.x != camera.position.x) {
+        lastCamPos.set(camera.position.x, camera.position.y, camera.position.z);
+    }
 
     if (isSystemView) {
         mesh.rotation.x += 0.01;
