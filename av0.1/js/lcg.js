@@ -31,7 +31,12 @@ lcg.prototype.getInt = function() {
 
 // return an int within specified values
 lcg.prototype.getIntInRange = function(min, max) {
-    return (this.getInt() % (max - min)) + min;
+    
+    var range = (max + 1) - min;
+    var rnd = this.getInt() / this.m;
+    return min + Math.floor(rnd * range);
+
+    //return (this.getInt() % (max - min)) + min;
 }
 
 // Usage
