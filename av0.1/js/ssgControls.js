@@ -41,8 +41,6 @@ CameraControls = function( camera, canvas ) {
  
     function handleKeys( event ) {
 
-        console.log(event.keyCode)
-
         if ( event.keyCode == scope.keyControls.UA || event.keyCode == scope.keyControls.W ) {
             movement( scope.vectors.forward, 10 );
             return
@@ -57,33 +55,6 @@ CameraControls = function( camera, canvas ) {
         else if ( event.keyCode == scope.keyControls.RA || event.keyCode == scope.keyControls.D ) {
             movement( null, null, 1, -1 );
         }
-
-            // case scope.keyControls.UA:
-            //     // move forward
-            //     applyThrust( scope.vectors.forward, 10 );
-            //     break;
-            // case scope.keyControls.UA && scope.keyControls.LA:
-            //     // move forward
-            //     applyThrust( scope.vectors.forward, 10 );
-            //     rotationAndTurning( 0, 1 );
-            //     break;
-            // case scope.keyControls.UA && scope.keyControls.RA:
-            //     // move forward
-            //     applyThrust( scope.vectors.forward, 10 );
-            //     rotationAndTurning( 1, -1 );
-            //     break;
-            // case scope.keyControls.DA:
-            //     // move backward 
-            //     applyThrust( scope.vectors.reverse, 10 );
-            //     break;
-            // case scope.keyControls.LA:
-            //     // bank left
-            //     rotationAndTurning( 0, 1 );
-            //     break;
-            // case scope.keyControls.RA:
-            //     // bank right
-            //     rotationAndTurning( 1, -1 );
-			// 	break;
     }
 
     canvas.addEventListener("keydown", handleKeys);
