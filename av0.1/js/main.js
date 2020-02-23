@@ -15,13 +15,14 @@ var lastCamPos;
 
 function initialize() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000000 );
 
     renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true} );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
-    controls = new THREE.OrbitControls( camera, renderer.domElement );
+    //controls = new THREE.OrbitControls( camera, renderer.domElement );
+    controls = new CameraControls( camera, renderer.domElement );
 
     addLighting();
 
@@ -34,8 +35,8 @@ function initialize() {
     }
 
     camera.position.set(6, -91, 40);
-    lastCamPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-    controls.update();
+    lastCamPos = new THREE.Vector3( camera.position.x, camera.position.y, camera.position.z );
+    //controls.update();
 }
 
 function regenerate() {
@@ -82,39 +83,39 @@ function testDynamicGeneration(seed, idx) {
     var clusterArray = [];
 
     var posCalcArray = [
-        { x: 0,     y: 0,       z: 0 },
-        { x: 1000,  y: 0,       z: 0 },
-        { x: 1000,  y: 0,       z: 1000 },
-        { x: 0,     y: 0,       z: 1000 },
-        { x: -1000, y: 0,       z: 1000 },
-        { x: -1000, y: 0,       z: 0 },
-        { x: -1000, y: 0,       z: -1000 },
-        { x: 0,     y: 0,       z: -1000 },
-        { x: 1000,  y: 0,       z: -1000 },
-        { x: 0,     y: 1000,   z: 0 },
-        { x: 1000,  y: 1000,   z: 0 },
-        { x: 1000,  y: 1000,   z: 1000 },
-        { x: 0,     y: 1000,   z: 1000 },
-        { x: -1000, y: 1000,   z: 1000 },
-        { x: -1000, y: 1000,   z: 0 },
-        { x: -1000, y: 1000,   z: -1000 },
-        { x: 0,     y: 1000,   z: -1000 },
-        { x: 1000,  y: 1000,   z: -1000 },
-        { x: 0,     y: -1000,  z: 0 },
-        { x: 1000,  y: -1000,  z: 0 },
-        { x: 1000,  y: -1000,  z: 1000 },
-        { x: 0,     y: -1000,  z: 1000 },
-        { x: -1000, y: -1000,  z: 1000 },
-        { x: -1000, y: -1000,  z: 0 },
-        { x: -1000, y: -1000,  z: -1000 },
-        { x: 0,     y: -1000,  z: -1000 },
-        { x: 1000,  y: -1000,  z: -1000 },
+        { x: 0,         y: 0,       z: 0 },
+        { x: 10000,     y: 0,       z: 0 },
+        { x: 10000,     y: 0,       z: 10000 },
+        { x: 0,         y: 0,       z: 10000 },
+        { x: -10000,    y: 0,       z: 10000 },
+        { x: -10000,    y: 0,       z: 0 },
+        { x: -10000,    y: 0,       z: -10000 },
+        { x: 0,         y: 0,       z: -10000 },
+        { x: 10000,     y: 0,       z: -10000 },
+        { x: 0,         y: 10000,   z: 0 },
+        { x: 10000,     y: 10000,   z: 0 },
+        { x: 10000,     y: 10000,   z: 10000 },
+        { x: 0,         y: 10000,   z: 10000 },
+        { x: -10000,    y: 10000,   z: 10000 },
+        { x: -10000,    y: 10000,   z: 0 },
+        { x: -10000,    y: 10000,   z: -10000 },
+        { x: 0,         y: 10000,   z: -10000 },
+        { x: 10000,     y: 10000,   z: -10000 },
+        { x: 0,         y: -10000,  z: 0 },
+        { x: 10000,     y: -10000,  z: 0 },
+        { x: 10000,     y: -10000,  z: 10000 },
+        { x: 0,         y: -10000,  z: 10000 },
+        { x: -10000,    y: -10000,  z: 10000 },
+        { x: -10000,    y: -10000,  z: 0 },
+        { x: -10000,    y: -10000,  z: -10000 },
+        { x: 0,         y: -10000,  z: -10000 },
+        { x: 10000,     y: -10000,  z: -10000 },
     ];
 
     for (var c = 0; c < posCalcArray.length; c++) {
         var gPos = new THREE.Vector3();
         var sPos = new THREE.Vector3(posCalcArray[c].x, posCalcArray[c].y, posCalcArray[c].z);
-        var numStars = rng.getIntInRange(500, 1000);
+        var numStars = rng.getIntInRange(1000, 2500);
 
         var cluster = new Cluster(gPos, sPos, numStars);
         
@@ -123,11 +124,11 @@ function testDynamicGeneration(seed, idx) {
 
     for (var cl in clusterArray) {
         for (var i = 0; i < clusterArray[cl].numStars; i++) {
-            var vX = rng.getIntInRange(clusterArray[cl].screenV3.x - 500, clusterArray[cl].screenV3.x + 500);
+            var vX = rng.getIntInRange(clusterArray[cl].screenV3.x - 5000, clusterArray[cl].screenV3.x + 5000);
     
-            var vY = rng.getIntInRange(clusterArray[cl].screenV3.y - 500, clusterArray[cl].screenV3.y + 500);
+            var vY = rng.getIntInRange(clusterArray[cl].screenV3.y - 5000, clusterArray[cl].screenV3.y + 5000);
     
-            var vZ = rng.getIntInRange(clusterArray[cl].screenV3.z - 500, clusterArray[cl].screenV3.z + 500);
+            var vZ = rng.getIntInRange(clusterArray[cl].screenV3.z - 5000, clusterArray[cl].screenV3.z + 5000);
     
             var scale = rng.getIntInRange(1, 5);
     
@@ -193,7 +194,7 @@ function animate() {
     }
 
     renderer.render( scene, camera );
-};
+}
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
